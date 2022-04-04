@@ -1,7 +1,20 @@
-<li>
-    {{#if author}}
-        <h1>{{firstName}} {{lastName}}</h1>
-    {{else}}
-        <h1>Unknown Author</h1>
-    {{/if}}
-</li>
+{{#if this.countriesReturned.fromTwoToTen}}
+    {{#each this.countryArr}}
+        <li>
+            <img class="flag" src="{{flags.svg}}" alt="{{name.official}} National Flag">
+            {{name.official}}
+        </li>
+    {{/each}}
+{{else}}
+    {{#each this.countryArr}}
+        <article>
+            <div class="country-info-wrapper">
+                <img class="flag" src="{{flags.svg}}" alt="{{name.official}} National Flag">
+                <h2>{{name.official}}</h2>
+            </div>
+            <p><strong>Capital:</strong> {{capital}}</p>
+            <p><strong>Population:</strong> {{population}}</p>
+            <p><strong>Languages:</strong> {{languages}}</p>
+        </article>
+    {{/each}}
+{{/if}}
