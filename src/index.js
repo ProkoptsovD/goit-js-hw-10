@@ -1,11 +1,11 @@
-import fetchCountries from './js/fetchCountries';
+import { fetchCountriesByName } from './js/fetchCountries';
 import createMarkupFromTemplate from './templates/country-info-tmpl.hbs';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import { warningOptn, notificationMessages } from './js/notifyOptions';
 const debounce = require('lodash.debounce');
-
 import './css/styles.css';
 
-const DEBOUNCE_DELAY = 300;
+const DEBOUNCE_DELAY = 400;
 
 const refs = {
   searchBox: document.querySelector('#search-box'),
@@ -17,14 +17,19 @@ refs.searchBox.addEventListener('input', debounce(onSearchBoxInput, DEBOUNCE_DEL
 
 function onSearchBoxInput(e) {
   const { value: userQuery } = e.target;
+
   if (!userQuery) {
     destroyRenderedMarkup();
     return;
   }
 
-  fetchCountries(userQuery.trim())
+  fetchCountriesByName(userQuery.trim())
     .then(response => response.json())
-    .then(handleData);
+    .then(handleData)
+    .catch(error => {
+      console.log(error);
+      Notify.warning(notificationMessages.warning, warningOptn);
+    });
 }
 
 function handleData(data) {
@@ -32,14 +37,14 @@ function handleData(data) {
     const countriesReturned = getQuantatyOfCountries(data);
     const markup = createMarkupFromTemplate({ data, countriesReturned });
 
-    if (countriesReturned.moreThanTen) {
-      Notify.info('To many matches found. Please enter more specific name');
+    if (countriesReturned.nothingFound) {
+      Notify.failure(notificationMessages.failure);
+      console.clear();
       return;
     }
 
-    if (countriesReturned.nothingFound) {
-      Notify.failure('Oops, there is no country with that name');
-      console.clear();
+    if (countriesReturned.moreThanTen) {
+      Notify.info(notificationMessages.info);
       return;
     }
 
@@ -55,8 +60,8 @@ function handleData(data) {
 
 function getQuantatyOfCountries(data) {
   return {
-    fromTwoToTen: data.length > 2 && data.length < 10,
-    moreThanTen: data.length > 10,
+    fromTwoToTen: data?.length > 2 && data?.length < 10,
+    moreThanTen: data?.length > 10,
     nothingFound: data?.status,
   };
 }

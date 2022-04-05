@@ -10,11 +10,12 @@
         <article>
             <div class="country-info-wrapper">
                 <img class="flag" src="{{flags.svg}}" alt="{{name.official}} National Flag">
-                <h2>{{name.official}}</h2>
+                <h2>{{name.official}}
+                </h2>
             </div>
-            <p><strong>Capital:</strong> {{capital}}</p>
-            <p><strong>Population:</strong> {{population}}</p>
-            <p><strong>Languages:</strong>
+            <p><b>Capital:</b> {{capital}}</p>
+            <p><b>Population:</b> {{population}}</p>
+            <p><b>Languages:</b>
                 {{#each languages}}
                         {{this}}{{#unless @last}},{{/unless}}
                 {{/each}}
