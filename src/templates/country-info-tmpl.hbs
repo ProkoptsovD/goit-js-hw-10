@@ -1,12 +1,12 @@
 {{#if this.countriesReturned.fromTwoToTen}}
-    {{#each this.countryArr}}
+    {{#each this.data}}
         <li>
             <img class="flag" src="{{flags.svg}}" alt="{{name.official}} National Flag">
             {{name.official}}
         </li>
     {{/each}}
 {{else}}
-    {{#each this.countryArr}}
+    {{#each this.data}}
         <article>
             <div class="country-info-wrapper">
                 <img class="flag" src="{{flags.svg}}" alt="{{name.official}} National Flag">
@@ -14,7 +14,11 @@
             </div>
             <p><strong>Capital:</strong> {{capital}}</p>
             <p><strong>Population:</strong> {{population}}</p>
-            <p><strong>Languages:</strong> {{languages}}</p>
+            <p><strong>Languages:</strong>
+                {{#each languages}}
+                        {{this}}{{#unless @last}},{{/unless}}
+                {{/each}}
+            </p>
         </article>
     {{/each}}
 {{/if}}

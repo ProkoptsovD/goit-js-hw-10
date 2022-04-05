@@ -5,6 +5,13 @@
 ul, ol {
   list-style: none;
 }
+h1, h2, h3, h4, h5, p, a, ul,
+ol {
+  margin: 0;
+  padding: 0;
+
+  text-decoration: none;
+}
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
@@ -13,7 +20,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #fafafa;
   color: #212121;
-  line-height: 0;
+  line-height: 1;
 } 
 
 #search-box {
@@ -35,7 +42,7 @@ li:not(:last-child) {
 
 .flag {
   display: block;
-  max-width: 35px;
+  max-width: 25px;
   max-height: 25px;
 
   margin-right: 5px;
@@ -45,8 +52,13 @@ li:not(:last-child) {
   display: flex;
   align-items: center;
 
+  width: max-content;
   margin-bottom: 15px;
 
   font-weight: 700;
   font-size: 2rem;
+}
+
+p:not(:last-child) {
+  margin-bottom: 10px;
 }
