@@ -62,7 +62,7 @@ function getQuantatyOfCountries(data) {
   return {
     fromTwoToTen: data?.length > 2 && data?.length < 10,
     moreThanTen: data?.length > 10,
-    nothingFound: data?.status,
+    nothingFound: data?.status == 404,
   };
 }
 
