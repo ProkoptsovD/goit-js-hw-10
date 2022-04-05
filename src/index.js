@@ -5,7 +5,7 @@ import { warningOptn, notificationMessages } from './js/notifyOptions';
 const debounce = require('lodash.debounce');
 import './css/styles.css';
 
-const DEBOUNCE_DELAY = 400;
+const DEBOUNCE_DELAY = 300;
 
 const refs = {
   searchBox: document.querySelector('#search-box'),
