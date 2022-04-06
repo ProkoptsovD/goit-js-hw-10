@@ -33,29 +33,25 @@ function onSearchBoxInput(e) {
 }
 
 function handleData(data) {
-  try {
-    const countriesReturned = getQuantatyOfCountries(data);
-    const markup = createMarkupFromTemplate({ data, countriesReturned });
+  const countriesReturned = getQuantatyOfCountries(data);
+  const markup = createMarkupFromTemplate({ data, countriesReturned });
 
-    if (countriesReturned.nothingFound) {
-      Notify.failure(notificationMessages.failure);
-      console.clear();
-      return;
-    }
-
-    if (countriesReturned.moreThanTen) {
-      Notify.info(notificationMessages.info);
-      return;
-    }
-
-    destroyRenderedMarkup();
-
-    countriesReturned.fromTwoToTen
-      ? inserMarkupTo(refs.countryList, markup)
-      : inserMarkupTo(refs.countryInfo, markup);
-  } catch (error) {
-    console.log(error);
+  if (countriesReturned.nothingFound) {
+    Notify.failure(notificationMessages.failure);
+    console.clear();
+    return;
   }
+
+  if (countriesReturned.moreThanTen) {
+    Notify.info(notificationMessages.info);
+    return;
+  }
+
+  destroyRenderedMarkup();
+
+  countriesReturned.fromTwoToTen
+    ? inserMarkupTo(refs.countryList, markup)
+    : inserMarkupTo(refs.countryInfo, markup);
 }
 
 function getQuantatyOfCountries(data) {
