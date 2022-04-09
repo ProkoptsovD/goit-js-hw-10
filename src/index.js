@@ -1,8 +1,15 @@
-import { fetchCountriesByName } from './js/fetchCountries';
-import createMarkupFromTemplate from './templates/country-info-tmpl.hbs';
+//==================libs==================================//
+const debounce = require('lodash.debounce');
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { warningOptn, notificationMessages } from './js/notifyOptions';
-const debounce = require('lodash.debounce');
+
+//==================handlebars tmpls=============================//
+import createMarkupCountryInfo from './templates/country-info-tmpl.hbs';
+import createMarkupCountryList from './templates/country-list-tmpl.hbs';
+
+// =================function to reach API=============================//
+import { fetchCountriesByName } from './js/fetchCountries';
+
 import './css/styles.css';
 
 const DEBOUNCE_DELAY = 300;
@@ -16,27 +23,30 @@ const refs = {
 refs.searchBox.addEventListener('input', debounce(onSearchBoxInput, DEBOUNCE_DELAY));
 
 function onSearchBoxInput(e) {
-  const { value: userQuery } = e.target;
+  const { value } = e.target;
+  const userQuery = value.trim();
 
   if (!userQuery) {
     destroyRenderedMarkup();
     return;
   }
 
-  fetchCountriesByName(userQuery.trim())
+  fetchCountriesByName(userQuery)
     .then(response => response.json())
     .then(handleData)
-    .catch(error => {
-      console.log(error);
-      Notify.warning(notificationMessages.warning, warningOptn);
-    });
+    .catch(handleError);
 }
 
 function handleData(data) {
-  const countriesReturned = getQuantatyOfCountries(data);
-  const markup = createMarkupFromTemplate({ data, countriesReturned });
+  const countriesReturned = {
+    zero: data?.status == 404,
+    fromTwoToTen: data?.length > 2 && data?.length < 10,
+    moreThanTen: data?.length > 10,
+  };
 
-  if (countriesReturned.nothingFound) {
+  destroyRenderedMarkup();
+
+  if (countriesReturned.zero) {
     Notify.failure(notificationMessages.failure);
     console.clear();
     return;
@@ -47,19 +57,9 @@ function handleData(data) {
     return;
   }
 
-  destroyRenderedMarkup();
-
   countriesReturned.fromTwoToTen
-    ? inserMarkupTo(refs.countryList, markup)
-    : inserMarkupTo(refs.countryInfo, markup);
-}
-
-function getQuantatyOfCountries(data) {
-  return {
-    fromTwoToTen: data?.length > 2 && data?.length < 10,
-    moreThanTen: data?.length > 10,
-    nothingFound: data?.status == 404,
-  };
+    ? inserMarkupTo(refs.countryList, createMarkupCountryList(data))
+    : inserMarkupTo(refs.countryInfo, createMarkupCountryInfo(data));
 }
 
 function inserMarkupTo(elem, markup) {
@@ -69,4 +69,9 @@ function inserMarkupTo(elem, markup) {
 function destroyRenderedMarkup() {
   refs.countryList.innerHTML = '';
   refs.countryInfo.innerHTML = '';
+}
+
+function handleError(error) {
+  console.log(error);
+  Notify.warning(notificationMessages.warning, warningOptn);
 }
